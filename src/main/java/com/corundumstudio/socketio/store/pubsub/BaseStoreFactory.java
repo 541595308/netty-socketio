@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.corundumstudio.socketio.handler.AuthorizeHandler;
 import com.corundumstudio.socketio.handler.ClientHead;
+import com.corundumstudio.socketio.namespace.Namespace;
 import com.corundumstudio.socketio.namespace.NamespacesHub;
 import com.corundumstudio.socketio.protocol.JsonSupport;
 import com.corundumstudio.socketio.store.StoreFactory;
@@ -55,8 +56,12 @@ public abstract class BaseStoreFactory implements StoreFactory {
             @Override
             public void onMessage(DispatchMessage msg) {
                 String name = msg.getRoom();
-
-                namespacesHub.get(msg.getNamespace()).dispatch(name, msg.getPacket());
+                Namespace ns = namespacesHub.get(msg.getNamespace());
+                if( ns == null ) {
+                	log.debug( "unsupport namespace " + msg.getNamespace() );
+                	return;
+                }
+                ns.dispatch(name, msg.getPacket());
                 log.debug("{} packet: {}", PubSubType.DISPATCH, msg.getPacket());
             }
         }, DispatchMessage.class);
@@ -65,8 +70,12 @@ public abstract class BaseStoreFactory implements StoreFactory {
             @Override
             public void onMessage(JoinLeaveMessage msg) {
                 String name = msg.getRoom();
-
-                namespacesHub.get(msg.getNamespace()).join(name, msg.getSessionId());
+                Namespace ns = namespacesHub.get(msg.getNamespace());
+                if( ns == null ) {
+                	log.debug( "unsupport namespace " + msg.getNamespace() );
+                	return;
+                }
+                ns.join(name, msg.getSessionId());
                 log.debug("{} sessionId: {}", PubSubType.JOIN, msg.getSessionId());
             }
         }, JoinLeaveMessage.class);
@@ -75,8 +84,12 @@ public abstract class BaseStoreFactory implements StoreFactory {
             @Override
             public void onMessage(JoinLeaveMessage msg) {
                 String name = msg.getRoom();
-
-                namespacesHub.get(msg.getNamespace()).leave(name, msg.getSessionId());
+                Namespace ns = namespacesHub.get(msg.getNamespace());
+                if( ns == null ) {
+                	log.debug( "unsupport namespace " + msg.getNamespace() );
+                	return;
+                }
+                ns.leave(name, msg.getSessionId());
                 log.debug("{} sessionId: {}", PubSubType.LEAVE, msg.getSessionId());
             }
         }, JoinLeaveMessage.class);
