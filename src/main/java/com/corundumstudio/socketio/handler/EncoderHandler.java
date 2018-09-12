@@ -232,6 +232,10 @@ public class EncoderHandler extends ChannelOutboundHandlerAdapter {
 
         while (true) {
             Queue<Packet> queue = msg.getClientHead().getPacketsQueue(msg.getTransport());
+            if( queue.size() >= 10 ) {
+            	log.info( "session＝{} 中累积了 {} 条消息", queue.size() );
+            }
+            
             Packet packet = queue.poll();
             if (packet == null) {
                 writeFutureList.setChannelPromise(promise);

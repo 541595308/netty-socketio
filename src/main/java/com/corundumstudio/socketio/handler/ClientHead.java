@@ -141,6 +141,9 @@ public class ClientHead {
         Channel channel = state.getChannel();
         if (channel == null
                 || (transport == Transport.POLLING && channel.attr(EncoderHandler.WRITE_ONCE).get() != null)) {
+        	if( channel == null ) {
+        		log.info( "发送数据失败 channel＝null sessionId={}", this.sessionId.toString() );
+        	}
             return null;
         }
         return sendPackets(transport, channel);
