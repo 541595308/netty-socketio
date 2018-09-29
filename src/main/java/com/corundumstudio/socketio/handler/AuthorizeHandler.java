@@ -245,7 +245,7 @@ public class AuthorizeHandler extends ChannelInboundHandlerAdapter implements Di
     }
 
     public void connect(ClientHead client) {
-        Namespace ns = namespacesHub.get(Namespace.DEFAULT_NAME);
+        Namespace ns = (Namespace) namespacesHub.get(Namespace.DEFAULT_NAME);
 
         if (!client.getNamespaces().contains(ns)) {
             Packet packet = new Packet(PacketType.MESSAGE);

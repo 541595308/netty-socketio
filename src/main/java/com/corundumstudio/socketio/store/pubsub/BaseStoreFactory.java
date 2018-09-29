@@ -18,9 +18,9 @@ package com.corundumstudio.socketio.store.pubsub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.corundumstudio.socketio.SocketIONamespace;
 import com.corundumstudio.socketio.handler.AuthorizeHandler;
 import com.corundumstudio.socketio.handler.ClientHead;
-import com.corundumstudio.socketio.namespace.Namespace;
 import com.corundumstudio.socketio.namespace.NamespacesHub;
 import com.corundumstudio.socketio.protocol.JsonSupport;
 import com.corundumstudio.socketio.store.StoreFactory;
@@ -56,7 +56,7 @@ public abstract class BaseStoreFactory implements StoreFactory {
             @Override
             public void onMessage(DispatchMessage msg) {
                 String name = msg.getRoom();
-                Namespace ns = namespacesHub.get(msg.getNamespace());
+                SocketIONamespace ns = namespacesHub.get(msg.getNamespace());
                 if( ns == null ) {
                 	log.debug( "unsupport namespace " + msg.getNamespace() );
                 	return;
@@ -70,7 +70,7 @@ public abstract class BaseStoreFactory implements StoreFactory {
             @Override
             public void onMessage(JoinLeaveMessage msg) {
                 String name = msg.getRoom();
-                Namespace ns = namespacesHub.get(msg.getNamespace());
+                SocketIONamespace ns = namespacesHub.get(msg.getNamespace());
                 if( ns == null ) {
                 	log.debug( "unsupport namespace " + msg.getNamespace() );
                 	return;
@@ -84,7 +84,7 @@ public abstract class BaseStoreFactory implements StoreFactory {
             @Override
             public void onMessage(JoinLeaveMessage msg) {
                 String name = msg.getRoom();
-                Namespace ns = namespacesHub.get(msg.getNamespace());
+                SocketIONamespace ns = namespacesHub.get(msg.getNamespace());
                 if( ns == null ) {
                 	log.debug( "unsupport namespace " + msg.getNamespace() );
                 	return;

@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import com.corundumstudio.socketio.listener.ClientListeners;
+import com.corundumstudio.socketio.protocol.Packet;
 
 /**
  * Fully thread-safe.
@@ -46,5 +47,41 @@ public interface SocketIONamespace extends ClientListeners {
      * @return client
      */
     SocketIOClient getClient(UUID uuid);
-
+    
+    /**
+     * 加入房间并广播到其他节点
+     * @param room
+     * @param sessionId
+     */
+    public void joinRoom(String room, UUID sessionId);
+    /**
+     * 加入房间，不广播.
+     * 用于处理其他节点广播来的加入请求
+     * @param room
+     * @param sessionId
+     */
+    public void join(String room, UUID sessionId);
+    
+    /**
+     * 离开房间并广播到其他节点
+     * @param room
+     * @param sessionId
+     */
+    public void leaveRoom(String room, UUID sessionId);
+    /**
+     * 离开房间，不广播
+     * 用于处理其他节点广播来的离开请求
+     * @param room
+     * @param sessionId
+     */
+    public void leave(String room, UUID sessionId);
+    
+    public Iterable<SocketIOClient> getRoomClients(String room);
+    /**
+     * 处理其他节点广播来的房间数据发送
+     * @param room
+     * @param packet
+     */
+    public void dispatch(String room, Packet packet);
+    
 }

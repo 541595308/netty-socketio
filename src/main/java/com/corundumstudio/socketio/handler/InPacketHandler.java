@@ -66,7 +66,7 @@ public class InPacketHandler extends SimpleChannelInboundHandler<PacketsMessage>
                 if (packet.hasAttachments() && !packet.isAttachmentsLoaded()) {
                     return;
                 }
-                Namespace ns = namespacesHub.get(packet.getNsp());
+                Namespace ns = (Namespace) namespacesHub.get(packet.getNsp());
                 if (ns == null) {
                     if (packet.getSubType() == PacketType.CONNECT) {
                         Packet p = new Packet(PacketType.MESSAGE);

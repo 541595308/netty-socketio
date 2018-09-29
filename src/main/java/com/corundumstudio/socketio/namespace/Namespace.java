@@ -347,6 +347,7 @@ public class Namespace implements SocketIONamespace {
         return roomClients.keySet();
     }
 
+    @Override
     public Iterable<SocketIOClient> getRoomClients(String room) {
         Set<UUID> sessionIds = roomClients.get(room);
 

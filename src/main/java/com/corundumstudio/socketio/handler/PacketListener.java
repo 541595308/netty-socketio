@@ -62,7 +62,7 @@ public class PacketListener {
             } else {
                 client.getBaseClient().schedulePingTimeout();
             }
-            Namespace namespace = namespacesHub.get(packet.getNsp());
+            Namespace namespace = (Namespace) namespacesHub.get(packet.getNsp());
             namespace.onPing(client);
             break;
         }
@@ -85,7 +85,7 @@ public class PacketListener {
             }
 
             if (packet.getSubType() == PacketType.CONNECT) {
-                Namespace namespace = namespacesHub.get(packet.getNsp());
+                Namespace namespace = (Namespace) namespacesHub.get(packet.getNsp());
                 namespace.onConnect(client);
                 // send connect handshake packet back to client
                 client.getBaseClient().send(packet, transport);
@@ -98,7 +98,7 @@ public class PacketListener {
 
             if (packet.getSubType() == PacketType.EVENT
                     || packet.getSubType() == PacketType.BINARY_EVENT) {
-                Namespace namespace = namespacesHub.get(packet.getNsp());
+                Namespace namespace = (Namespace) namespacesHub.get(packet.getNsp());
                 List<Object> args = Collections.emptyList();
                 if (packet.getData() != null) {
                     args = packet.getData();
