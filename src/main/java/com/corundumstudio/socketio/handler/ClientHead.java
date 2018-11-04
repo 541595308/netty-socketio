@@ -143,6 +143,9 @@ public class ClientHead {
                 || (transport == Transport.POLLING && channel.attr(EncoderHandler.WRITE_ONCE).get() != null)) {
             return null;
         }
+        if( state.getPacketsQueue().size() >= 10 ) {
+        	log.info( "session＝{} 中累积了 {} 条消息未消费", this.getSessionId(), state.getPacketsQueue().size() );
+        }
         return sendPackets(transport, channel);
     }
 
