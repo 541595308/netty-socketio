@@ -38,14 +38,6 @@
      </developer>
  </developers>
 
- <distributionManagement>
-     <repository>
-         <id>repo1</id>
-         <name>Release</name>
-         <url>file://C:/123</url>
-     </repository>
- </distributionManagement>
-
  <properties>
      <skipTests>true</skipTests>
      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -182,6 +174,24 @@
         <scope>provided</scope>
     </dependency>
  </dependencies>
+
+
+	<distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>nexus-releases</name>
+            <url>
+               http://192.168.8.234:8081/repository/maven-releases/
+            </url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>nexus-snapshots</name>
+            <url>
+                http://192.168.8.234:8081/repository/maven-snapshots/
+            </url>
+        </snapshotRepository>
+    </distributionManagement>
 
 
  <build>
