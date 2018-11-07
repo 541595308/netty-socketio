@@ -232,7 +232,7 @@ public class EncoderHandler extends ChannelOutboundHandlerAdapter {
 
         while (true) {
             Queue<Packet> queue = msg.getClientHead().getPacketsQueue(msg.getTransport());
-            if( queue.size() >= 10 ) {
+            if( queue.size() >= 5 ) {
             	log.info( "session＝{} 中累积了 {} 条消息开始消费", msg.getSessionId(), queue.size() );
             }
             
