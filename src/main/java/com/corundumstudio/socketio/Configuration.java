@@ -19,14 +19,16 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.net.ssl.KeyManagerFactory;
+
 import com.corundumstudio.socketio.handler.SuccessAuthorizationListener;
 import com.corundumstudio.socketio.listener.DefaultExceptionListener;
 import com.corundumstudio.socketio.listener.ExceptionListener;
 import com.corundumstudio.socketio.protocol.JsonSupport;
 import com.corundumstudio.socketio.store.MemoryStoreFactory;
 import com.corundumstudio.socketio.store.StoreFactory;
-
-import javax.net.ssl.KeyManagerFactory;
+import com.corundumstudio.socketio.store.room.MemoryRoomClientsCenterStoreFactory;
+import com.corundumstudio.socketio.store.room.RoomClientsCenterStoreFactory;
 
 public class Configuration {
 
@@ -71,7 +73,9 @@ public class Configuration {
     private SocketConfig socketConfig = new SocketConfig();
 
     private StoreFactory storeFactory = new MemoryStoreFactory();
-
+    
+    private RoomClientsCenterStoreFactory roomClientsCenterStoreFactory = new MemoryRoomClientsCenterStoreFactory();
+    
     private JsonSupport jsonSupport;
 
     private AuthorizationListener authorizationListener = new SuccessAuthorizationListener();
@@ -138,6 +142,7 @@ public class Configuration {
 
         setPreferDirectBuffer(conf.isPreferDirectBuffer());
         setStoreFactory(conf.getStoreFactory());
+        setRoomClientsCenterStoreFactory( conf.getRoomClientsCenterStoreFactory() );
         setAuthorizationListener(conf.getAuthorizationListener());
         setExceptionListener(conf.getExceptionListener());
         setSocketConfig(conf.getSocketConfig());
@@ -368,8 +373,14 @@ public class Configuration {
     public StoreFactory getStoreFactory() {
         return storeFactory;
     }
+    public RoomClientsCenterStoreFactory getRoomClientsCenterStoreFactory() {
+		return roomClientsCenterStoreFactory;
+	}
+	public void setRoomClientsCenterStoreFactory(RoomClientsCenterStoreFactory roomClientsCenterStoreFactory) {
+		this.roomClientsCenterStoreFactory = roomClientsCenterStoreFactory;
+	}
 
-    /**
+	/**
      * Authorization listener invoked on every handshake.
      * Accepts or denies a client by {@code AuthorizationListener.isAuthorized} method.
      * <b>Accepts</b> all clients by default.

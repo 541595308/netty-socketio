@@ -17,7 +17,8 @@ package com.corundumstudio.socketio.store.pubsub;
 
 public enum PubSubType {
 
-    CONNECT, DISCONNECT, JOIN, LEAVE, DISPATCH;
+//    CONNECT, DISCONNECT, JOIN, LEAVE, DISPATCH;
+	CONNECT, DISCONNECT, DISPATCH;
 
     @Override
     public String toString() {

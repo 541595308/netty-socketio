@@ -66,33 +66,33 @@ public abstract class BaseStoreFactory implements StoreFactory {
             }
         }, DispatchMessage.class);
 
-        pubSubStore().subscribe(PubSubType.JOIN, new PubSubListener<JoinLeaveMessage>() {
-            @Override
-            public void onMessage(JoinLeaveMessage msg) {
-                String name = msg.getRoom();
-                SocketIONamespace ns = namespacesHub.get(msg.getNamespace());
-                if( ns == null ) {
-                	log.debug( "unsupport namespace " + msg.getNamespace() );
-                	return;
-                }
-                ns.join(name, msg.getSessionId());
-                log.debug("{} sessionId: {}", PubSubType.JOIN, msg.getSessionId());
-            }
-        }, JoinLeaveMessage.class);
+//        pubSubStore().subscribe(PubSubType.JOIN, new PubSubListener<JoinLeaveMessage>() {
+//            @Override
+//            public void onMessage(JoinLeaveMessage msg) {
+//                String name = msg.getRoom();
+//                SocketIONamespace ns = namespacesHub.get(msg.getNamespace());
+//                if( ns == null ) {
+//                	log.debug( "unsupport namespace " + msg.getNamespace() );
+//                	return;
+//                }
+//                ns.join(name, msg.getSessionId());
+//                log.debug("{} sessionId: {}", PubSubType.JOIN, msg.getSessionId());
+//            }
+//        }, JoinLeaveMessage.class);
 
-        pubSubStore().subscribe(PubSubType.LEAVE, new PubSubListener<JoinLeaveMessage>() {
-            @Override
-            public void onMessage(JoinLeaveMessage msg) {
-                String name = msg.getRoom();
-                SocketIONamespace ns = namespacesHub.get(msg.getNamespace());
-                if( ns == null ) {
-                	log.debug( "unsupport namespace " + msg.getNamespace() );
-                	return;
-                }
-                ns.leave(name, msg.getSessionId());
-                log.debug("{} sessionId: {}", PubSubType.LEAVE, msg.getSessionId());
-            }
-        }, JoinLeaveMessage.class);
+//        pubSubStore().subscribe(PubSubType.LEAVE, new PubSubListener<JoinLeaveMessage>() {
+//            @Override
+//            public void onMessage(JoinLeaveMessage msg) {
+//                String name = msg.getRoom();
+//                SocketIONamespace ns = namespacesHub.get(msg.getNamespace());
+//                if( ns == null ) {
+//                	log.debug( "unsupport namespace " + msg.getNamespace() );
+//                	return;
+//                }
+//                ns.leave(name, msg.getSessionId());
+//                log.debug("{} sessionId: {}", PubSubType.LEAVE, msg.getSessionId());
+//            }
+//        }, JoinLeaveMessage.class);
     }
 
     @Override

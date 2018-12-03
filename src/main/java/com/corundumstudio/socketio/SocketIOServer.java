@@ -244,7 +244,7 @@ public class SocketIOServer implements ClientListeners {
     }
 
     @Override
-    public void addMultiTypeEventListener(String eventName, MultiTypeEventListener listener, Class<?>... eventClass) {
+    public void addMultiTypeEventListener(String eventName, MultiTypeEventListener listener, Class<MultiTypeArgs>... eventClass) {
         mainNamespace.addMultiTypeEventListener(eventName, listener, eventClass);
     }
 
