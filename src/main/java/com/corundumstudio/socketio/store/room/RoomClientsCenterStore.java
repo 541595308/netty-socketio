@@ -19,4 +19,6 @@ public interface RoomClientsCenterStore {
 	
 	public Set<String> getAllRooms();
 	
+	public boolean checkRoomExist( String room );
+	
 }

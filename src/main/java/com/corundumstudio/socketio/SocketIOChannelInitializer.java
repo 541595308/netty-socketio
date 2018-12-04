@@ -122,6 +122,7 @@ public class SocketIOChannelInitializer extends ChannelInitializer<Channel> impl
         StoreFactory factory = configuration.getStoreFactory();
         authorizeHandler = new AuthorizeHandler(connectPath, scheduler, configuration, namespacesHub, factory, this, ackManager, clientsBox);
         factory.init(namespacesHub, authorizeHandler, jsonSupport);
+        configuration.getRoomClientsCenterStoreFactory().init( scheduler );
         xhrPollingTransport = new PollingTransport(decoder, authorizeHandler, clientsBox);
         webSocketTransport = new WebSocketTransport(isSsl, authorizeHandler, configuration, scheduler, clientsBox);
 

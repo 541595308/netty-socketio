@@ -74,7 +74,7 @@ public class Configuration {
 
     private StoreFactory storeFactory = new MemoryStoreFactory();
     
-    private RoomClientsCenterStoreFactory roomClientsCenterStoreFactory = new MemoryRoomClientsCenterStoreFactory();
+    private RoomClientsCenterStoreFactory<?> roomClientsCenterStoreFactory = new MemoryRoomClientsCenterStoreFactory();
     
     private JsonSupport jsonSupport;
 
@@ -373,10 +373,10 @@ public class Configuration {
     public StoreFactory getStoreFactory() {
         return storeFactory;
     }
-    public RoomClientsCenterStoreFactory getRoomClientsCenterStoreFactory() {
+    public RoomClientsCenterStoreFactory<?> getRoomClientsCenterStoreFactory() {
 		return roomClientsCenterStoreFactory;
 	}
-	public void setRoomClientsCenterStoreFactory(RoomClientsCenterStoreFactory roomClientsCenterStoreFactory) {
+	public void setRoomClientsCenterStoreFactory(RoomClientsCenterStoreFactory<?> roomClientsCenterStoreFactory) {
 		this.roomClientsCenterStoreFactory = roomClientsCenterStoreFactory;
 	}
 

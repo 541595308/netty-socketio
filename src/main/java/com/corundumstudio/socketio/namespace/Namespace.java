@@ -98,16 +98,16 @@ public class Namespace implements SocketIONamespace {
     @Override
     @SuppressWarnings("unchecked")
     public void addMultiTypeEventListener(String eventName, MultiTypeEventListener listener,
-            Class<MultiTypeArgs>... eventClass) {
-		EventEntry<MultiTypeArgs> entry = (EventEntry<MultiTypeArgs>) eventListeners.get(eventName);
+            Class<?>... eventClass) {
+		EventEntry<?> entry = eventListeners.get(eventName);
         if (entry == null) {
-            entry = new EventEntry<MultiTypeArgs>();
-            EventEntry<MultiTypeArgs> oldEntry = (EventEntry<MultiTypeArgs>) eventListeners.putIfAbsent(eventName, entry);
+            entry = new EventEntry<>();
+            EventEntry<?> oldEntry = eventListeners.putIfAbsent(eventName, entry);
             if (oldEntry != null) {
                 entry = oldEntry;
             }
         }
-        entry.addListener(listener);
+        ( (EventEntry<MultiTypeArgs>) entry ).addListener(listener);
         jsonSupport.addEventMapping(name, eventName, eventClass);
     }
     

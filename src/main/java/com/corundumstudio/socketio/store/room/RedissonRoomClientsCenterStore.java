@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.redisson.api.RScoredSortedSet;
@@ -13,35 +12,48 @@ import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.corundumstudio.socketio.scheduler.CancelableScheduler;
+
 public class RedissonRoomClientsCenterStore implements RoomClientsCenterStore {
 	
 	private Logger logger = LoggerFactory.getLogger( RedissonRoomClientsCenterStore.class );
+	
+	private CancelableScheduler scheduler;
 	
 	private RScoredSortedSet<String> sessionIds;
 	private RSetMultimap<String, String> clientRooms;
 	private RSetMultimap<String, String> roomClients;
 	private long pingTimeout;
 	
-	RedissonRoomClientsCenterStore( String namespace, RedissonClient redisson, ScheduledExecutorService scheduled, long pingTimeout ) {
+	
+	RedissonRoomClientsCenterStore( String namespace, RedissonClient redisson, long pingTimeout ) {
 		this.sessionIds = redisson.getScoredSortedSet( String.format( "socketio:%s:client-id", namespace ) );
 		this.clientRooms = redisson.getSetMultimap( String.format( "socketio:%s:client-rooms", namespace ) );
 		this.roomClients = redisson.getSetMultimap( String.format( "socketio:%s:room-clients", namespace ) );
 		this.pingTimeout = pingTimeout;
-		
-		scheduled.schedule( () -> {
-			try {
-				this.dealExpireSession();
-			} catch ( Exception e ) {
-				logger.error( "定时处理过期的sessionId 出现异常", e );
-			}
-		}, pingTimeout, TimeUnit.MILLISECONDS );
+	}
+	
+	void scheduleSessionExpireCheck( CancelableScheduler scheduler ) {
+		if( this.scheduler != null ) {
+			return;
+		}
+		this.scheduler = scheduler;
+		this.dealExpireSession();
 	}
 	
 	/**
 	 * 处理过期session
 	 */
 	private void dealExpireSession() {
-		this.sessionIds.removeRangeByScore( 0, true, System.currentTimeMillis(), true );
+		this.scheduler.schedule( () -> {
+			try {
+				this.sessionIds.removeRangeByScore( 0, true, System.currentTimeMillis(), true );
+			} catch ( Exception e ) {
+				logger.error( "定时处理过期的sessionId 出现异常", e );
+			} finally {
+				this.dealExpireSession();
+			}
+		}, pingTimeout, TimeUnit.MILLISECONDS );
 	}
 	
 
@@ -79,10 +91,10 @@ public class RedissonRoomClientsCenterStore implements RoomClientsCenterStore {
 	@Override
 	public Set<UUID> getRoomClients(String room) {
 		Set<String> sessionIdSet = this.roomClients.get( room );
-		Set<UUID> set = new HashSet<UUID>();
-		if( set == null || set.size() == 0 ) {
-			return set;
+		if( sessionIdSet == null || sessionIdSet.size() == 0 ) {
+			return Collections.emptySet();
 		}
+		Set<UUID> set = new HashSet<UUID>();
 		for( String id : sessionIdSet ) {
 			set.add( UUID.fromString( id ) );
 		}
@@ -97,6 +109,11 @@ public class RedissonRoomClientsCenterStore implements RoomClientsCenterStore {
 	@Override
 	public Set<String> getAllRooms() {
 		return Collections.unmodifiableSet( this.roomClients.keySet() );
+	}
+
+	@Override
+	public boolean checkRoomExist(String room) {
+		return this.roomClients.containsKey( room );
 	}
 	
 }

@@ -15,11 +15,9 @@
  */
 package com.corundumstudio.socketio.listener;
 
-import com.corundumstudio.socketio.MultiTypeArgs;
-
 public interface ClientListeners {
 
-    void addMultiTypeEventListener(String eventName, MultiTypeEventListener listener, Class<MultiTypeArgs> ... eventClass);
+    void addMultiTypeEventListener(String eventName, MultiTypeEventListener listener, Class<?> ... eventClass);
 
     <T> void addEventListener(String eventName, Class<T> eventClass, DataListener<T> listener);
 

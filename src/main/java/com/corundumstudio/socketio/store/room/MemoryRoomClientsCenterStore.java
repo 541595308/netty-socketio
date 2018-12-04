@@ -84,5 +84,10 @@ public class MemoryRoomClientsCenterStore implements RoomClientsCenterStore {
 	public Set<String> getAllRooms() {
 		return Collections.unmodifiableSet( this.roomClients.keySet() );
 	}
+
+	@Override
+	public boolean checkRoomExist(String room) {
+		return this.roomClients.containsKey( room );
+	}
 	
 }
