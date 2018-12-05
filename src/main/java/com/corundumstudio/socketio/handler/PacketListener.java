@@ -62,8 +62,9 @@ public class PacketListener {
             } else {
                 client.getBaseClient().schedulePingTimeout();
             }
-            Namespace namespace = (Namespace) namespacesHub.get(packet.getNsp());
-            namespace.onPing(client);
+            client.getBaseClient().onChannelPing();
+//            Namespace namespace = (Namespace) namespacesHub.get(packet.getNsp());
+//            namespace.onPing(client);
             break;
         }
 

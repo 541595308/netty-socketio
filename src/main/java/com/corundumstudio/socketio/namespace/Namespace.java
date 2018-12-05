@@ -82,7 +82,7 @@ public class Namespace implements SocketIONamespace {
         this.storeFactory = configuration.getStoreFactory();
         this.exceptionListener = configuration.getExceptionListener();
         this.ackMode = configuration.getAckMode();
-        RoomClientsCenterStoreFactory roomClientsCenterStoreFactory = configuration.getRoomClientsCenterStoreFactory();
+        RoomClientsCenterStoreFactory<?> roomClientsCenterStoreFactory = configuration.getRoomClientsCenterStoreFactory();
         this.roomClientsCenterStore = roomClientsCenterStoreFactory.getRoomClientsCenterStore( this.name, configuration.getPingTimeout() );
     }
 

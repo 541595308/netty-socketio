@@ -1,5 +1,6 @@
 package com.corundumstudio.socketio.store.room;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,13 +48,21 @@ public class RedissonRoomClientsCenterStore implements RoomClientsCenterStore {
 	private void dealExpireSession() {
 		this.scheduler.schedule( () -> {
 			try {
-				this.sessionIds.removeRangeByScore( 0, true, System.currentTimeMillis(), true );
+				long currentTime = System.currentTimeMillis();
+				Collection<String> expireSessionIds = this.sessionIds.valueRange( 0, true, currentTime, true );
+				if( expireSessionIds == null || expireSessionIds.size() == 0 ) {
+					return;
+				}
+				//移除过期的session信息
+				for( String sessionId : expireSessionIds ) {
+					this.removeClient( sessionId);
+				}
 			} catch ( Exception e ) {
 				logger.error( "定时处理过期的sessionId 出现异常", e );
 			} finally {
 				this.dealExpireSession();
 			}
-		}, pingTimeout, TimeUnit.MILLISECONDS );
+		}, this.pingTimeout, TimeUnit.MILLISECONDS );
 	}
 	
 
@@ -78,15 +87,18 @@ public class RedissonRoomClientsCenterStore implements RoomClientsCenterStore {
 
 	@Override
 	public void removeClient( UUID sessionId ) {
-		String sessionIdStr = sessionId.toString();
-		this.sessionIds.remove( sessionIdStr );
-		Set<String> rooms = this.clientRooms.removeAll( sessionIdStr );
+		this.removeClient( sessionId.toString() );
+	}
+	
+	private void removeClient( String sessionId ) {
+		this.sessionIds.remove( sessionId );
+		Set<String> rooms = this.clientRooms.removeAll( sessionId );
 		if( rooms != null && rooms.size() > 0 ) {
 			for( String room : rooms ) {
-				this.roomClients.remove( room, sessionIdStr );
+				this.roomClients.remove( room, sessionId );
 			}
 		}
-	}
+	} 
 
 	@Override
 	public Set<UUID> getRoomClients(String room) {

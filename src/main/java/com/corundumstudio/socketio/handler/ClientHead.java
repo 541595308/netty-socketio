@@ -177,7 +177,13 @@ public class ClientHead {
     public boolean isConnected() {
         return !disconnected.get();
     }
-
+    
+    public void onChannelPing() {
+    	for( Entry<Namespace, NamespaceClient> entry : namespaceClients.entrySet() ) {
+    		entry.getKey().onPing( entry.getValue() );
+        }
+    }
+    
     public void onChannelDisconnect() {
         cancelPingTimeout();
 
