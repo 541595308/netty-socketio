@@ -87,6 +87,7 @@ public class Namespace implements SocketIONamespace {
     }
 
     public void addClient(SocketIOClient client) {
+    	this.roomClientsCenterStore.onClientPing( client.getSessionId() );
         allClients.put(client.getSessionId(), client);
     }
 
