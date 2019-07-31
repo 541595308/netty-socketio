@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Nikita Koksharov
+ * Copyright (c) 2012-2019 Nikita Koksharov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,11 +54,11 @@ public class RedissonPubSubStore implements PubSubStore {
     public <T extends PubSubMessage> void subscribe(PubSubType type, final PubSubListener<T> listener, Class<T> clazz) {
         String name = type.toString();
         RTopic topic = redissonSub.getTopic(name);
-        int regId = topic.addListener(clazz, new MessageListener<T>() {
+        int regId = topic.addListener(PubSubMessage.class, new MessageListener<PubSubMessage>() {
             @Override
-            public void onMessage(CharSequence channel, T msg) {
+            public void onMessage(CharSequence channel, PubSubMessage msg) {
                 if (!nodeId.equals(msg.getNodeId())) {
-                    listener.onMessage(msg);
+                    listener.onMessage((T)msg);
                 }
             }
         });
