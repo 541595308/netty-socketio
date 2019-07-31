@@ -279,7 +279,12 @@ public class PacketDecoder {
         if (packet.getType() == PacketType.MESSAGE) {
             if (packet.getSubType() == PacketType.CONNECT
                     || packet.getSubType() == PacketType.DISCONNECT) {
-                packet.setNsp(readString(frame));
+            	StringBuilder nsp = new StringBuilder( readString(frame) );
+            	int length = nsp.length();
+            	if( nsp.charAt( length - 1 ) == ',' ) {
+            		nsp.deleteCharAt( length - 1 );
+            	}
+                packet.setNsp( nsp.toString() );
             }
 
             if (packet.hasAttachments() && !packet.isAttachmentsLoaded()) {
